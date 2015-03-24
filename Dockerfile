@@ -34,8 +34,8 @@ RUN pecl install memcached gearman mongo geoip gmagick-beta && \
   echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini"
 
 # forward request and error logs to docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log
-RUN ln -sf /dev/stderr /var/log/nginx/error.log
+RUN ln -sf /proc/1/fd/1 /var/log/nginx/access.log
+RUN ln -sf /proc/1/fd/2 /var/log/nginx/error.log
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY php-fpm.conf /usr/local/etc/
