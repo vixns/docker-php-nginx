@@ -4,7 +4,7 @@ MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
 RUN echo "deb http://nginx.org/packages/mainline/debian/ wheezy nginx" >> /etc/apt/sources.list
 
-ENV NGINX_VERSION 1.7.10-1~wheezy
+ENV NGINX_VERSION 1.7.11-1~wheezy
 
 RUN apt-get update && \
 	apt-get install -y ca-certificates nginx=${NGINX_VERSION} runit file re2c libicu-dev zlib1g-dev \
