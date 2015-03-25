@@ -30,7 +30,6 @@ RUN pecl install memcached gearman mongo geoip gmagick-beta && \
   echo "opcache.memory_consumption=128" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
   echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
   echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
-  echo "opcache.revalidate_freq=60" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
   echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini"
 
 # forward request and error logs to docker log collector
