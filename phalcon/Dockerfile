@@ -1,5 +1,4 @@
-FROM vixns/php-nginx:5.6-fpm-yzu
-MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
+FROM vixns/php-nginx:5.6
 
 ENV PHLACON_VERSION 1.3.4
 

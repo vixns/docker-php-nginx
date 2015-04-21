@@ -1,4 +1,4 @@
-FROM vixns/php-nginx:5.6-fpm-yzu
+FROM vixns/php-nginx:5.6
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
 ENV DRUSH_VERSION 6.x
