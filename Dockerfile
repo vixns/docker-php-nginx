@@ -2,16 +2,20 @@ FROM php:5.6-fpm
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
-RUN echo "deb http://nginx.org/packages/mainline/debian/ wheezy nginx" >> /etc/apt/sources.list
+RUN echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
 
-ENV NGINX_VERSION 1.7.12-1~wheezy
+ENV NGINX_VERSION 1.8.0-1~jessie 
 
 RUN apt-get update && \
 	apt-get install -y ca-certificates nginx=${NGINX_VERSION} runit file re2c libicu-dev zlib1g-dev \
 	libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libicu52 libmcrypt4 g++ \
-  xvfb wkhtmltopdf imagemagick git libssl-dev && \
+  imagemagick git libssl-dev xfonts-base xfonts-75dpi && \
   mkdir /usr/local/etc/php-fpm.d && \
 	rm -rf /var/lib/apt/lists/*
+
+RUN \
+  curl -s -L -o /tmp/wkhtmltox.deb http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb && \
+  dpkg -i /tmp/wkhtmltox.deb && rm /tmp/wkhtmltox.deb
 
 RUN docker-php-ext-install sockets intl zip mbstring mcrypt gd
 
@@ -37,8 +41,6 @@ COPY php-fpm.conf /usr/local/etc/
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php-fpm.sh /etc/service/php-fpm/run
 COPY nginx.sh /etc/service/nginx/run
-COPY wkhtmltopdf.sh /usr/local/bin/wkhtmltopdf
-COPY wkhtmltoimage.sh /usr/local/bin/wkhtmltoimage
 COPY runsvdir-start.sh /usr/local/sbin/runsvdir-start
 
 VOLUME ["/var/cache/nginx"]
