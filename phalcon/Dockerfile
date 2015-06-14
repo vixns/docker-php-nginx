@@ -1,4 +1,4 @@
-FROM vixns/php-nginx:5.6.7
+FROM vixns/php-nginx:5.6
 
 ENV PHLACON_VERSION 1.3.4
 

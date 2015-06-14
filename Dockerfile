@@ -1,13 +1,12 @@
 FROM php:5.6-fpm
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
-RUN echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
+RUN curl -L -s http://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
+echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 
-ENV NGINX_VERSION 1.8.0-1~jessie 
-
-RUN apt-get update && \
-	apt-get install -y ca-certificates nginx=${NGINX_VERSION} runit file re2c libicu-dev zlib1g-dev \
+RUN apt-get update && apt-get -y dist-upgrade
+RUN \
+	apt-get install --no-install-recommends -y ca-certificates nginx-extras runit file re2c libicu-dev zlib1g-dev \
 	libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libicu52 libmcrypt4 g++ \
   imagemagick git libssl-dev xfonts-base xfonts-75dpi && \
   mkdir /usr/local/etc/php-fpm.d && \

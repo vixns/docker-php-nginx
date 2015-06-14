@@ -1,10 +1,10 @@
-FROM vixns/php-nginx:5.6.7
+FROM vixns/php-nginx:5.6
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
 ENV DRUSH_VERSION 6.x
 
 RUN apt-get update && \
-	apt-get install -y ssmtp libmysqlclient-dev &&\
+	apt-get install --no-install-recommends -y ssmtp libmysqlclient-dev &&\
 	rm -rf /var/lib/apt/lists/*
 
 RUN CPPFLAGS=-I/usr/include/mysql pecl install pdo_mysql && \
