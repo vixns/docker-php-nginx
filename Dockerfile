@@ -7,16 +7,16 @@ echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
 RUN apt-get update && apt-get -y dist-upgrade
 RUN \
 	apt-get install --no-install-recommends -y ca-certificates nginx-extras runit file re2c libicu-dev zlib1g-dev \
-	libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libicu52 libmcrypt4 g++ \
+	libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng12-dev libicu52 libmcrypt4 g++ \
   imagemagick git libssl-dev xfonts-base xfonts-75dpi && \
   mkdir /usr/local/etc/php-fpm.d && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN \
-  curl -s -L -o /tmp/wkhtmltox.deb http://downloads.sourceforge.net/project/wkhtmltopdf/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb && \
+  curl -s -L -o /tmp/wkhtmltox.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb && \
   dpkg -i /tmp/wkhtmltox.deb && rm /tmp/wkhtmltox.deb
 
-RUN docker-php-ext-install sockets intl zip mbstring mcrypt gd
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/lib && docker-php-ext-install sockets intl zip mbstring mcrypt gd
 
 RUN pecl install imagick-beta && \
   echo "extension=imagick.so" >> "/usr/local/etc/php/conf.d/ext-imagick.ini" &&  \  
