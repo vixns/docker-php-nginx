@@ -3,7 +3,7 @@ FROM vixns/php-nginx:5.6-drush
 WORKDIR /data/htdocs
 
 # https://www.drupal.org/node/3060/release
-ENV DRUPAL_VERSION 7.38
+ENV DRUPAL_VERSION 7.39
 ENV DRUPAL_MD5 c18298c1a5aed32ddbdac605fdef7fce
 
 RUN curl -fSL "http://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
