@@ -1,15 +1,16 @@
-  FROM php:5.6-fpm
+FROM php:5.6-fpm
 MAINTAINER Stéphane Cottin <stephane.cottin@vixns.com>
 
-RUN curl -L -s http://www.dotdeb.org/dotdeb.gpg | apt-key add - && \
-echo "deb http://packages.dotdeb.org jessie all" >> /etc/apt/sources.list
+RUN curl -L -s http://apt.vixns.net/vixns.gpg | apt-key add - && \
+echo "deb http://apt.vixns.net jessie contrib non-free main" >>  /etc/apt/sources.list && \
+echo "deb http://http.debian.net/debian jessie-backports contrib non-free main" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -y dist-upgrade
 RUN \
-	apt-get install --no-install-recommends -y ca-certificates nginx-extras runit file re2c libicu-dev zlib1g-dev \
+	apt-get install --no-install-recommends -y ca-certificates nginx runit file re2c libicu-dev zlib1g-dev \
 	libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng12-dev libicu52 libmcrypt4 g++ \
   imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev && \
-  mkdir /usr/local/etc/php-fpm.d && \
+  mkdir -p /usr/local/etc/php-fpm.d && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN \
