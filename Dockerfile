@@ -36,6 +36,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN ln -sf /proc/1/fd/1 /var/log/nginx/access.log
 RUN ln -sf /proc/1/fd/2 /var/log/nginx/error.log
 
+# clean bad fpm pool files
+RUN rm /usr/local/etc/php-fpm.d/*conf
+
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY php-fpm.conf /usr/local/etc/
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
