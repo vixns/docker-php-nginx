@@ -13,10 +13,6 @@ RUN \
   mkdir -p /usr/local/etc/php-fpm.d && \
 	rm -rf /var/lib/apt/lists/*
 
-RUN \
-  curl -s -L -o /tmp/wkhtmltox.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb && \
-  dpkg -i /tmp/wkhtmltox.deb && rm /tmp/wkhtmltox.deb
-
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/lib && docker-php-ext-install sockets intl zip mbstring mcrypt gd
 
 RUN pecl install imagick-beta && \
