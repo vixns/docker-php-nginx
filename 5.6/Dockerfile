@@ -39,6 +39,7 @@ RUN ln -sf /proc/1/fd/2 /var/log/nginx/error.log
 # clean bad fpm pool files
 RUN rm /usr/local/etc/php-fpm.d/*conf
 
+COPY policy.xml /etc/ImageMagick-6/policy.xml
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY php-fpm.conf /usr/local/etc/
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
