@@ -5,7 +5,7 @@ RUN curl -L -s http://apt.vixns.net/vixns.gpg | apt-key add - && \
 echo "deb http://apt.vixns.net jessie contrib non-free main" >>  /etc/apt/sources.list && \
 echo "deb http://http.debian.net/debian jessie-backports contrib non-free main" >> /etc/apt/sources.list
 
-RUN apt-get update && apt-get --no-install-recommends -t jessie-backports -y dist-upgrade
+RUN apt-get update && apt-get --no-install-recommends -y dist-upgrade
 RUN \
 	apt-get install --no-install-recommends -y ca-certificates nginx runit file re2c libicu-dev zlib1g-dev \
 	libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng12-dev libicu52 libmcrypt4 g++ \
