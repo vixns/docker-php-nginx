@@ -24,10 +24,10 @@ rm /usr/local/etc/php-fpm.d/*conf && \
 dpkg --purge libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng12-dev libssl-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev && \
 rm -rf /var/lib/apt/lists/*
 
-COPY policy.xml /etc/ImageMagick-6/policy.xml
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY policy.xml /etc/ImageMagick-6/
+COPY nginx.conf /etc/nginx/
 COPY php-fpm.conf /usr/local/etc/
-COPY www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY www.conf /usr/local/etc/php-fpm.d/
 COPY php-fpm.sh /etc/service/php-fpm/run
 COPY nginx.sh /etc/service/nginx/run
 COPY runsvdir-start.sh /usr/local/sbin/runsvdir-start
