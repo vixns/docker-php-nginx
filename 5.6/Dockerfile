@@ -23,7 +23,7 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 ln -sf /proc/1/fd/1 /var/log/nginx/access.log && \
 ln -sf /proc/1/fd/2 /var/log/nginx/error.log && \
 rm /usr/local/etc/php-fpm.d/*conf && \
-dpkg --purge libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng12-dev libssl-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev && \
+dpkg --purge libicu-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libssl-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev && \
 rm -rf /var/lib/apt/lists/* && \
 mkdir -p /etc/service/php-fpm/ && \
 mkdir -p /etc/service/nginx/ && \
