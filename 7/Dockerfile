@@ -1,4 +1,4 @@
-FROM php:7-fpm
+FROM php:7.0-fpm
 COPY . /src
 RUN \
 curl -L -s http://apt.vixns.net/vixns.gpg | apt-key add - && \
