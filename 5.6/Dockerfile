@@ -15,9 +15,9 @@ pecl install imagick-beta && \
   echo "date.timezone=UTC" >> "/usr/local/etc/php/conf.d/timezone.ini" && \
   echo "zend_extension=opcache.so" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
   echo "opcache.enable_cli=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
-  echo "opcache.memory_consumption=128" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
-  echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
-  echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
+  echo "opcache.memory_consumption=192" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
+  echo "opcache.interned_strings_buffer=16" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
+  echo "opcache.max_accelerated_files=7963" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
   echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 ln -sf /proc/1/fd/1 /var/log/nginx/access.log && \
@@ -30,6 +30,7 @@ mkdir -p /etc/service/nginx/ && \
 mv /src/policy.xml /etc/ImageMagick-6/policy.xml && \
 mv /src/nginx.conf /etc/nginx/nginx.conf && \
 mv /src/php-fpm.conf /usr/local/etc/php-fpm.conf && \
+rm -f /usr/local/etc/php-fpm.d/* && \
 mv /src/www.conf /usr/local/etc/php-fpm.d/www.conf && \
 mv /src/php-fpm.sh /etc/service/php-fpm/run && \
 mv /src/nginx.sh /etc/service/nginx/run && \

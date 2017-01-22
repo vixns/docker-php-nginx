@@ -28,6 +28,7 @@ mkdir -p /etc/service/nginx/ && \
 mv /src/policy.xml /etc/ImageMagick-6/policy.xml && \
 mv /src/nginx.conf /etc/nginx/nginx.conf && \
 mv /src/php-fpm.conf /usr/local/etc/php-fpm.conf && \
+rm -f /usr/local/etc/php-fpm.d/* && \
 mv /src/www.conf /usr/local/etc/php-fpm.d/www.conf && \
 mv /src/php-fpm.sh /etc/service/php-fpm/run && \
 mv /src/nginx.sh /etc/service/nginx/run && \
