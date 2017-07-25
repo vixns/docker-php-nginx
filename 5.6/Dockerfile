@@ -7,10 +7,10 @@ echo "deb http://http.debian.net/debian jessie-backports contrib non-free main" 
 apt-get update && apt-get --no-install-recommends -t jessie-backports -y dist-upgrade && \
 apt-get install --no-install-recommends -t jessie-backports -y ca-certificates nginx runit file re2c libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng12-dev libicu52 libmcrypt4 g++ imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev && \
 mkdir -p /usr/local/etc/php-fpm.d && \
-curl -s -L -o /tmp/wkhtmltox.deb http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb && \
+curl -s -L -o /tmp/wkhtmltox.deb https://downloads.wkhtmltopdf.org/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-jessie-amd64.deb && \
 dpkg -i /tmp/wkhtmltox.deb && rm /tmp/wkhtmltox.deb && \
 docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/lib && docker-php-ext-install sockets intl zip mbstring mcrypt gd && \
-pecl install imagick-beta && \
+pecl install imagick && \
   echo "extension=imagick.so" >> "/usr/local/etc/php/conf.d/ext-imagick.ini" &&  \  
   echo "date.timezone=UTC" >> "/usr/local/etc/php/conf.d/timezone.ini" && \
   echo "zend_extension=opcache.so" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" && \
