@@ -2,9 +2,9 @@ FROM vixns/php-nginx:5.6
 
 RUN \
   apt-get update \
-  && apt-get install -y -t jessie-backports --no-install-recommends \
+  && apt-get install -y -t stretch-backports --no-install-recommends \
   libmemcached-dev libmysqlclient-dev \
-  ssmtp libmysqlclient-dev mysql-client \
+  ssmtp libmysqlclient-dev mysql-client pgrep \
   && docker-php-ext-install pdo_mysql \
   && pecl install igbinary \
   && echo "extension=igbinary.so" > "/usr/local/etc/php/conf.d/ext-igbinary.ini" \
