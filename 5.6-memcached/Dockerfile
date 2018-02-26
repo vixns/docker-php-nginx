@@ -2,9 +2,9 @@ FROM vixns/php-nginx:5.6
 
 RUN \
   apt-get update \
-  && apt-get install -y -t stretch-backports --no-install-recommends \
+  && apt-get install -y -t jessie-backports --no-install-recommends \
   libmemcached-dev libmysqlclient-dev \
-  ssmtp libmysqlclient-dev mysql-client pgrep \
+  ssmtp libmysqlclient-dev mysql-client \
   && docker-php-ext-install pdo_mysql \
   && pecl install igbinary \
   && echo "extension=igbinary.so" > "/usr/local/etc/php/conf.d/ext-igbinary.ini" \
@@ -16,7 +16,7 @@ RUN \
   && docker-php-ext-install memcached-2.2.0 \
   && pecl install apcu-4.0.11 \
   && echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini \
-  && php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > /usr/local/bin/drush \
+  && curl -sL https://github.com/drush-ops/drush/releases/download/8.1.16/drush.phar -o /usr/local/bin/drush \
   && chmod 755 /usr/local/bin/drush \
   && export VERSION=`php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;"` \
   && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/${VERSION} \
