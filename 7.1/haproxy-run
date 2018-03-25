@@ -1,6 +1,6 @@
 #!/bin/sh
 exec 2>&1
-if [ -z "$NS1" ]; then
+if [ ! -e "/etc/haproxy/haproxy.cfg" ]; then
   touch down
   sv stop .
   exit 0

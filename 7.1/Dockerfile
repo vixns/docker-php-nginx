@@ -7,7 +7,6 @@ ENV LUA_VERSION=5.3.4 \
 	LUA_SHA1=79790cfd40e09ba796b01a571d4d63b52b1cd950
 
 COPY haproxy-run /etc/service/haproxy/run
-COPY haproxy.cfg /etc/haproxy/haproxy.cfg
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /etc/php/7.1/php-fpm.d/www.conf
 
