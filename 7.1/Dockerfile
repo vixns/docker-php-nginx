@@ -4,7 +4,8 @@ ENV HAPROXY_MAJOR 1.8
 ENV HAPROXY_VERSION 1.8.5
 ENV HAPROXY_MD5 a640cb01532462a6d0758e71d5f0a596
 ENV LUA_VERSION=5.3.4 \
-	LUA_SHA1=79790cfd40e09ba796b01a571d4d63b52b1cd950
+	LUA_SHA1=79790cfd40e09ba796b01a571d4d63b52b1cd950 \
+	MUSL_LOCPATH=/usr/local/share/i18n/locales/musl
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -24,6 +25,11 @@ RUN set -x \
 		readline-dev \
 		tar \
 		zlib-dev \
+		cmake \
+		musl-dev \
+		gettext-dev \
+		libintl \
+		git \
 	\
 # install Lua
 	&& wget -O lua.tar.gz "https://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz" \
@@ -60,6 +66,11 @@ RUN set -x \
 	&& make -C /usr/src/haproxy -j "$(getconf _NPROCESSORS_ONLN)" all $makeOpts \
 	&& make -C /usr/src/haproxy install-bin $makeOpts \
 	\
+# install musl-locales with french
+	&& cd /tmp \
+	&& git clone https://github.com/vixns/musl-locales.git \
+	&& cd musl-locales && cmake . && make && make install \
+	&& cd /tmp && rm -rf musl-locales \
 # purge the remnants of our static Lua
 	&& rm -rf /usr/local/lua-install \
 	\
