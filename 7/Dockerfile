@@ -1,9 +1,9 @@
 FROM php:7.0-fpm
 COPY . /src
 RUN \
-echo "deb http://http.debian.net/debian jessie-backports contrib non-free main" >> /etc/apt/sources.list && \
+echo "deb http://http.debian.net/debian stretch-backports contrib non-free main" >> /etc/apt/sources.list && \
 apt-get update && apt-get --no-install-recommends -y dist-upgrade && \
-apt-get install --no-install-recommends -t jessie-backports -y nginx runit libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libmagickcore-6.q16-dev libjpeg-dev libpng12-dev librsvg2-dev libicu52 libmcrypt4  imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev && \
+apt-get install --no-install-recommends -y nginx runit libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libmagickcore-6.q16-dev libjpeg-dev libpng-dev librsvg2-dev libicu57 libmcrypt4  imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev && \
 mkdir -p /usr/local/etc/php-fpm.d && \
 docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/lib && docker-php-ext-install sockets intl zip mbstring mcrypt gd && \
 pecl install imagick-beta && \
@@ -19,10 +19,8 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 ln -sf /proc/1/fd/1 /var/log/nginx/access.log && \
 ln -sf /proc/1/fd/2 /var/log/nginx/error.log && \
 rm /usr/local/etc/php-fpm.d/*conf && \
-echo "deb http://http.debian.net/debian stretch contrib non-free main" >> /etc/apt/sources.list && \
-echo "deb http://http.debian.net/debian stretch-backports contrib non-free main" >> /etc/apt/sources.list && \
 apt-get update && apt-get -t stretch-backports -y install haproxy && \
-dpkg --purge libicu-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev && \
+dpkg --purge libicu-dev libxml2-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev && \
 rm -rf /var/lib/apt/lists/* && \
 mkdir -p /etc/service/php-fpm/ && \
 mkdir -p /etc/service/nginx/ /etc/service/haproxy/ && \
@@ -35,6 +33,7 @@ mv /src/php-fpm.sh /etc/service/php-fpm/run && \
 mv /src/nginx.sh /etc/service/nginx/run && \
 mv /src/haproxy.sh /etc/service/haproxy/run && \
 mv /src/runsvdir-start.sh /sbin/runsvdir-start && \
+ln -s /sbin/runsvdir-start /usr/local/sbin/runsvdir-start && \
 rm /etc/haproxy/haproxy.cfg && \
 rm -rf /src
 
