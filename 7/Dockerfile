@@ -3,7 +3,7 @@ COPY . /src
 RUN \
 echo "deb http://http.debian.net/debian stretch-backports contrib non-free main" >> /etc/apt/sources.list && \
 apt-get update && apt-get --no-install-recommends -y dist-upgrade && \
-apt-get install --no-install-recommends -y nginx runit libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libmagickcore-6.q16-dev libjpeg-dev libpng-dev librsvg2-dev libicu57 libmcrypt4  imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev && \
+apt-get install --no-install-recommends -y nginx runit libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libmagickcore-6.q16-dev libjpeg-dev libpng-dev librsvg2-dev libicu57 libmcrypt4  imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev procps && \
 mkdir -p /usr/local/etc/php-fpm.d && \
 docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/lib && docker-php-ext-install sockets intl zip mbstring mcrypt gd && \
 pecl install imagick-beta && \
