@@ -20,6 +20,10 @@ ln -sf /proc/1/fd/1 /var/log/nginx/access.log && \
 ln -sf /proc/1/fd/2 /var/log/nginx/error.log && \
 rm /usr/local/etc/php-fpm.d/*conf && \
 apt-get update && apt-get -t stretch-backports -y install haproxy && \
+curl -L -o /tmp/haproxy-1.8.8.tar.gz http://www.haproxy.org/download/1.8/src/haproxy-1.8.8.tar.gz && \
+cd /tmp && tar zxf haproxy-1.8.8.tar.gz && cd haproxy-1.8.8 && \
+make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 && \
+mv haproxy /usr/sbin/haproxy && cd /tmp && rm -rf haproxy* && \
 dpkg --purge libicu-dev libxml2-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev && \
 rm -rf /var/lib/apt/lists/* && \
 mkdir -p /etc/service/php-fpm/ && \
