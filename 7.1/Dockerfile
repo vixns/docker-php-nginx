@@ -77,6 +77,14 @@ RUN set -x \
 	&& git clone https://github.com/vixns/musl-locales.git \
 	&& cd musl-locales && cmake . && make && make install \
 	&& cd /tmp && rm -rf musl-locales \
+# install proxysql
+	&& cd  /tmp \
+	&& curl -sL https://github.com/sysown/proxysql/archive/${PROXYSQL_VERSION}.tar.gz | tar -zxf - \
+	&& cd proxysql-${PROXYSQL_VERSION} \
+	&& NOJEMALLOC=1 make \
+	&& make install \
+	&& cd /tmp \
+	&& rm -rf proxysql-${PROXYSQL_VERSION} \
 # purge the remnants of our static Lua
 	&& rm -rf /usr/local/lua-install \
 	\
@@ -90,14 +98,7 @@ RUN set -x \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-&& apk add --virtual .haproxy-rundeps $runDeps \
-&& cd  /tmp \
-&& curl -sL https://github.com/sysown/proxysql/archive/${PROXYSQL_VERSION}.tar.gz | tar -zxf - \
-&& cd proxysql-${PROXYSQL_VERSION} \
-&& NOJEMALLOC=1 make \
-&& make install \
-&& cd /tmp \
-&& rm -rf proxysql-${PROXYSQL_VERSION} \
+&& apk add --virtual .haproxy-rundeps $runDeps libstdc++ \
 && apk del .build-deps \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run \
 && echo "date.timezone=UTC" >> "/etc/php/7.1/conf.d/timezone.ini" \
