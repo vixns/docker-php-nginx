@@ -1,13 +1,15 @@
 FROM phpearth/php:7.1-nginx
 
-ENV HAPROXY_MAJOR 1.8
-ENV HAPROXY_VERSION 1.8.8
-ENV HAPROXY_MD5 8633b6e661169d2fc6a44d82a3aceae5
-ENV LUA_VERSION=5.3.4 \
-	LUA_SHA1=79790cfd40e09ba796b01a571d4d63b52b1cd950 \
-	MUSL_LOCPATH=/usr/local/share/i18n/locales/musl
+ENV HAPROXY_MAJOR=1.8 \
+HAPROXY_VERSION=1.8.13 \
+HAPROXY_SHA256=2bf5dafbb5f1530c0e67ab63666565de948591f8e0ee2a1d3c84c45e738220f1 \
+LUA_VERSION=5.3.4 \
+LUA_SHA1=79790cfd40e09ba796b01a571d4d63b52b1cd950 \
+MUSL_LOCPATH=/usr/local/share/i18n/locales/musl \
+PROXYSQL_VERSION=1.4.11
 
 COPY haproxy-run /etc/service/haproxy/run
+COPY proxysql-run /etc/service/proxysql/run
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /etc/php/7.1/php-fpm.d/www.conf
 
@@ -16,6 +18,7 @@ RUN set -x \
 	&& apk add --no-cache --virtual .build-deps \
 		ca-certificates \
 		gcc \
+		g++ \
 		libc-dev \
 		linux-headers \
 		make \
@@ -30,6 +33,9 @@ RUN set -x \
 		gettext-dev \
 		libintl \
 		git \
+		libexecinfo-dev \
+		patch  \
+		gawk \
 	\
 # install Lua
 	&& wget -O lua.tar.gz "https://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz" \
@@ -51,7 +57,7 @@ RUN set -x \
 	\
 # install HAProxy
 	&& wget -O haproxy.tar.gz "https://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" \
-	&& echo "$HAPROXY_MD5 *haproxy.tar.gz" | md5sum -c \
+	&& echo "$HAPROXY_SHA256 *haproxy.tar.gz" | sha256sum -c \
 	&& mkdir -p /usr/src/haproxy \
 	&& tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
 	&& rm haproxy.tar.gz \
@@ -84,9 +90,16 @@ RUN set -x \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)" \
-	&& apk add --virtual .haproxy-rundeps $runDeps \
+&& apk add --virtual .haproxy-rundeps $runDeps \
+&& cd  /tmp \
+&& curl -sL https://github.com/sysown/proxysql/archive/${PROXYSQL_VERSION}.tar.gz | tar -zxf - \
+&& cd proxysql-${PROXYSQL_VERSION} \
+&& NOJEMALLOC=1 make \
+&& make install \
+&& cd /tmp \
+&& rm -rf proxysql-${PROXYSQL_VERSION} \
 && apk del .build-deps \
-&& chmod +x /etc/service/haproxy/run \
+&& chmod +x /etc/service/haproxy/run /etc/service/proxysql/run \
 && echo "date.timezone=UTC" >> "/etc/php/7.1/conf.d/timezone.ini" \
 && echo "pdo_mysql.default_socket=/run/mysql.sock" >> "/etc/php/7.1/conf.d/pdo_mysql.ini" \
 && echo "mysql.default_socket=/run/mysql.sock" >> "/etc/php/7.1/conf.d/mysql.ini" \
