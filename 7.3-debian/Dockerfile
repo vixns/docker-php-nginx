@@ -11,10 +11,10 @@ ENV TINI_VERSION=0.18.0
 RUN set -x \
 	\
 	&& export DEBIAN_FRONTEND=noninteractive \
-	&& echo "deb http://http.debian.net/debian stretch-backports contrib non-free main" >> /etc/apt/sources.list \
+	&& echo "deb http://http.debian.net/debian buster-backports contrib non-free main" >> /etc/apt/sources.list \
 	&& apt-get update \
-	&& apt-get dist-upgrade -y -t stretch-backports \
-	&& apt-get install --no-install-recommends -t stretch-backports -y \
+	&& apt-get dist-upgrade -y -t buster-backports \
+	&& apt-get install --no-install-recommends -t buster-backports -y \
 		haproxy \
 		nginx \
 		runit \
@@ -22,7 +22,7 @@ RUN set -x \
 		libfreetype6-dev libjpeg62-turbo-dev libxml2-dev \
 	\
 # install proxysql
-&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/vixns/proxysql/releases/download/v2.0.0-beta.1/proxysql_2.0.0-debian9_amd64.deb \
+&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/sysown/proxysql/releases/download/v2.0.6/proxysql_2.0.6-debian9_amd64.deb \
 && dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb \
 && rm /tmp/proxysql_2.0.0-debian9_amd64.deb \
 && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/lib \
