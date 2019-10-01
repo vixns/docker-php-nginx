@@ -9,9 +9,11 @@ chmod +x /tini && \
 echo "deb http://http.debian.net/debian stretch-backports contrib non-free main" >> /etc/apt/sources.list && \
 apt-get update && apt-get --no-install-recommends -t stretch-backports -y dist-upgrade && \
 apt-get install --no-install-recommends -t stretch-backports -y ca-certificates procps nginx runit file re2c libicu-dev zlib1g-dev libmcrypt-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libjpeg-dev libpng-dev libicu57 libmcrypt4 g++ imagemagick git libssl-dev xfonts-base xfonts-75dpi libfreetype6-dev && \
+cd /tmp && curl -sL http://www.haproxy.org/download/2.0/src/haproxy-2.0.7.tar.gz | tar zxf - && \
+cd /tmp/haproxy-2.0.7 && make TARGET=linux-glibc && make PREFIX=/usr install && \
 mkdir -p /usr/local/etc/php-fpm.d && \
 curl -s -L -o /tmp/wkhtmltox.deb https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb && \
-dpkg -i /tmp/wkhtmltox.deb && rm /tmp/wkhtmltox.deb && \
+dpkg -i /tmp/wkhtmltox.deb && \
 # install proxysql
 curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/vixns/proxysql/releases/download/v2.0.0-beta.1/proxysql_2.0.0-debian9_amd64.deb && \
 dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb && \
@@ -33,8 +35,6 @@ curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 ln -sf /proc/1/fd/1 /var/log/nginx/access.log && \
 ln -sf /proc/1/fd/2 /var/log/nginx/error.log && \
 rm /usr/local/etc/php-fpm.d/*conf && \
-cd /tmp && curl -sL http://www.haproxy.org/download/2.0/src/haproxy-2.0.7.tar.gz | tar zxf - \
-cd haproxy-2.0.7 && make PREFIX=/usr TARGET=linux-glibc install && cd/ && rm -rf /tmp/haproxy-2.0.7 \
 dpkg --purge libicu-dev libmagickcore-dev libmagickwand-dev libmagick++-dev libssl-dev libfreetype6-dev libmagickcore-6.q16-dev libgraphviz-dev libglib2.0-dev libtiff5-dev libwmf-dev libcairo2-dev libgdk-pixbuf2.0-dev libfontconfig1-dev librsvg2-dev libmagickwand-6.q16-dev libmagick++-6.q16-dev libxml2-dev && \
 apt-get autoremove -y && \
 rm -rf /var/lib/apt/lists/* && \
@@ -53,6 +53,6 @@ mv /src/php-fpm.sh /etc/service/php-fpm/run && \
 mv /src/nginx.sh /etc/service/nginx/run && \
 mv /src/runsvdir-start.sh /usr/local/sbin/runsvdir-start && \
 chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run  && \
-rm -rf /src
+rm -rf /src /tmp/*
 
 CMD ["/usr/local/sbin/runsvdir-start"]
