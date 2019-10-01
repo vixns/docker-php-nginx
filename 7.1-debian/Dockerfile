@@ -11,19 +11,18 @@ ENV TINI_VERSION=0.18.0
 RUN set -x \
 	\
 	&& export DEBIAN_FRONTEND=noninteractive \
-	&& echo "deb http://http.debian.net/debian stretch-backports contrib non-free main" >> /etc/apt/sources.list \
+	&& echo "deb http://http.debian.net/debian buster-backports contrib non-free main" >> /etc/apt/sources.list \
 	&& apt-get update \
-	&& apt-get dist-upgrade -y -t stretch-backports \
-	&& apt-get install --no-install-recommends -t stretch-backports -y \
-		haproxy \
+	&& apt-get dist-upgrade -y -t buster-backports \
+	&& apt-get install --no-install-recommends -t buster-backports -y \
+	    haproxy \
 		nginx \
 		runit \
 		procps \
 	\
 # install proxysql
-	&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/vixns/proxysql/releases/download/v2.0.0-beta.1/proxysql_2.0.0-debian9_amd64.deb \
+	&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/sysown/proxysql/releases/download/v2.0.6/proxysql_2.0.6-debian9_amd64.deb \
 	&& dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb \
-	&& rm /tmp/proxysql_2.0.0-debian9_amd64.deb \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
@@ -42,7 +41,7 @@ RUN set -x \
 && ln -sf /proc/1/fd/2 /var/log/nginx/error.log \
 && curl -s -L -o /tmp/tini_${TINI_VERSION}-amd64.deb https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}-amd64.deb \
 && dpkg -i /tmp/tini_${TINI_VERSION}-amd64.deb \
-&& rm /tmp/tini_${TINI_VERSION}-amd64.deb \
+&& rm -rf /tmp/* \
 && chmod +x /run.sh
 
 COPY nginx.conf /etc/nginx/nginx.conf
