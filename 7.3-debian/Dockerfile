@@ -19,15 +19,15 @@ RUN set -x \
 		nginx \
 		runit \
 		procps \
-		libfreetype6-dev libjpeg62-turbo-dev libxml2-dev \
+	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
 	\
 # install proxysql
 && curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/sysown/proxysql/releases/download/v2.0.6/proxysql_2.0.6-debian9_amd64.deb \
 && dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb \
 && rm /tmp/proxysql_2.0.0-debian9_amd64.deb \
-&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/lib \
+&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
 && docker-php-ext-install gd \
-&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libxml2-dev \
+&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
