@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.3-fpm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -15,14 +15,20 @@ RUN set -x \
 	&& apt-get update \
 	&& apt-get dist-upgrade -y -t buster-backports \
 	&& apt-get install --no-install-recommends -t buster-backports -y \
-	    haproxy \
+		haproxy \
 		nginx \
 		runit \
+                gnupg \
 		procps \
+	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
 	\
 # install proxysql
-	&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/sysown/proxysql/releases/download/v2.0.6/proxysql_2.0.6-debian9_amd64.deb \
-	&& dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb \
+&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/sysown/proxysql/releases/download/v2.0.6/proxysql_2.0.6-debian9_amd64.deb \
+&& dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb \
+&& rm /tmp/proxysql_2.0.0-debian9_amd64.deb \
+&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
+&& docker-php-ext-install gd \
+&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
@@ -41,7 +47,7 @@ RUN set -x \
 && ln -sf /proc/1/fd/2 /var/log/nginx/error.log \
 && curl -s -L -o /tmp/tini_${TINI_VERSION}-amd64.deb https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}-amd64.deb \
 && dpkg -i /tmp/tini_${TINI_VERSION}-amd64.deb \
-&& rm -rf /tmp/* \
+&& rm /tmp/tini_${TINI_VERSION}-amd64.deb \
 && chmod +x /run.sh
 
 COPY nginx.conf /etc/nginx/nginx.conf
