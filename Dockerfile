@@ -18,6 +18,7 @@ RUN set -x \
 	    haproxy \
 		nginx \
 		runit \
+                gnupg \
 		procps \
 	\
 # install proxysql
