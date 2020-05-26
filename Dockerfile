@@ -23,7 +23,7 @@ RUN set -x \
 	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
 	\
 # install proxysql
-&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.11/proxysql_2.0.11-debian10_amd64.deb \
+&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.12/proxysql_2.0.12-debian9_amd64.deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
 && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
