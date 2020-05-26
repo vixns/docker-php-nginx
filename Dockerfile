@@ -22,8 +22,8 @@ RUN set -x \
 		procps \
 	\
 # install proxysql
-	&& curl -sL -o /tmp/proxysql_2.0.0-debian9_amd64.deb https://github.com/sysown/proxysql/releases/download/v2.0.6/proxysql_2.0.6-debian9_amd64.deb \
-	&& dpkg -i /tmp/proxysql_2.0.0-debian9_amd64.deb \
+	&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.12/proxysql_2.0.12-debian9_amd64.deb \
+	&& dpkg -i /tmp/proxysql.deb \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
