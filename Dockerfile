@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:8.0-fpm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -20,15 +20,15 @@ RUN set -x \
 		runit \
                 gnupg \
 		procps \
-	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
+	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
 	\
 # install proxysql
 && curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.12/proxysql_2.0.12-debian10_amd64.deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
-&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
+&& docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
 && docker-php-ext-install gd \
-&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev \
+&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev libwebp-dev \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
