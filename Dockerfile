@@ -48,11 +48,14 @@ RUN set -x \
 && curl -s -L -o /tmp/tini_${TINI_VERSION}-amd64.deb https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}-amd64.deb \
 && dpkg -i /tmp/tini_${TINI_VERSION}-amd64.deb \
 && rm /tmp/tini_${TINI_VERSION}-amd64.deb \
-&& chmod +x /run.sh
+&& chmod +x /run.sh \
+&& mkdir -p /var/lib/proxysql \
+&& chown -R www-data /etc/service /var/lib/proxysql
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
+USER www-data
 ENTRYPOINT ["tini"]
 CMD ["/run.sh"]
