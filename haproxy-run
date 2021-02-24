@@ -1,5 +1,4 @@
 #!/bin/sh
-exec 2>&1
 if [ ! -e "/etc/haproxy/haproxy.cfg" ]; then
   touch down
   sv down .
