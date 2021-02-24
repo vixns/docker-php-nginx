@@ -1,5 +1,4 @@
 #!/bin/sh
-exec 2>&1
 if [ ! -e "/etc/proxysql/proxysql.cnf" ]; then
   touch down
   sv down .
