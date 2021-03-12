@@ -4,5 +4,5 @@ if [ ! -e "/etc/haproxy/haproxy.cfg" ]; then
   sv down .
   exit 0
 fi
-mkdir -p /run/haproxy
+mkdir -p /tmp/haproxy
 exec $(which haproxy) -W -f /etc/haproxy/haproxy.cfg

@@ -20,15 +20,15 @@ RUN set -x \
 		runit \
                 gnupg \
 		procps \
-	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
+	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
 	\
 # install proxysql
-&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.12/proxysql_2.0.12-debian10_amd64.deb \
+&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.14/proxysql_2.0.14-debian10_amd64.deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
-&& docker-php-ext-configure gd --with-freetype --with-jpeg \
+&& docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
 && docker-php-ext-install gd \
-&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev \
+&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev libwebp-dev \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
@@ -43,16 +43,17 @@ RUN set -x \
 && echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
-&& ln -sf /proc/1/fd/1 /var/log/nginx/access.log \
-&& ln -sf /proc/1/fd/2 /var/log/nginx/error.log \
 && curl -s -L -o /tmp/tini_${TINI_VERSION}-amd64.deb https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}-amd64.deb \
 && dpkg -i /tmp/tini_${TINI_VERSION}-amd64.deb \
 && rm /tmp/tini_${TINI_VERSION}-amd64.deb \
-&& chmod +x /run.sh
+&& chmod +x /run.sh \
+&& mkdir -p /var/lib/proxysql \
+&& chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
+USER www-data
 ENTRYPOINT ["tini"]
 CMD ["/run.sh"]

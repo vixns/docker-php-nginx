@@ -4,5 +4,4 @@ if [ ! -e "/etc/proxysql/proxysql.cnf" ]; then
   sv down .
   exit 0
 fi
-mkdir -p /var/lib/proxysql
 exec proxysql -c /etc/proxysql/proxysql.cnf -D /var/lib/proxysql -f -e
