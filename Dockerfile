@@ -9,21 +9,18 @@ COPY run.sh /run.sh
 ENV TINI_VERSION=0.18.0
 
 RUN set -x \
-	\
-	&& export DEBIAN_FRONTEND=noninteractive \
-	&& echo "deb http://http.debian.net/debian buster-backports contrib non-free main" >> /etc/apt/sources.list \
-	&& apt-get update \
-	&& apt-get dist-upgrade -y -t buster-backports \
-	&& apt-get install --no-install-recommends -t buster-backports -y \
-		haproxy \
-		nginx \
-		runit \
-                gnupg \
-		procps \
-	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
-	\
-# install proxysql
-&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.14/proxysql_2.0.14-debian10_amd64.deb \
+&& export DEBIAN_FRONTEND=noninteractive \
+&& echo "deb http://http.debian.net/debian buster-backports contrib non-free main" >> /etc/apt/sources.list \
+&& apt-get update \
+&& apt-get dist-upgrade -y -t buster-backports \
+&& apt-get install --no-install-recommends -t buster-backports -y \
+	haproxy \
+	nginx \
+	runit \
+	gnupg \
+	procps \
+	libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
+&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.1.1/proxysql_2.1.1-debian10_amd64.deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
 && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
