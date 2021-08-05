@@ -1,4 +1,4 @@
-FROM php:8.0.6-fpm
+FROM php:8.0.9-fpm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
