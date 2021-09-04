@@ -6,29 +6,27 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV TINI_VERSION=0.18.0
+ENV TINI_VERSION=0.19.0 PROXYSQL_VERSION=2.2.1
 
 RUN set -x \
-	\
-	&& export DEBIAN_FRONTEND=noninteractive \
-	&& echo "deb http://http.debian.net/debian buster-backports contrib non-free main" >> /etc/apt/sources.list \
-	&& apt-get update \
-	&& apt-get dist-upgrade -y -t buster-backports \
-	&& apt-get install --no-install-recommends -t buster-backports -y \
-		haproxy \
-		nginx \
-		runit \
-                gnupg \
-		procps \
-	        libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
-	\
-# install proxysql
-&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v2.0.12/proxysql_2.0.12-debian10_amd64.deb \
+    \
+    && export DEBIAN_FRONTEND=noninteractive \
+    && echo "deb http://http.debian.net/debian bullseye-backports contrib non-free main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get dist-upgrade -y -t bullseye-backports \
+    && apt-get install --no-install-recommends -t bullseye-backports -y \
+        haproxy \
+        nginx \
+        runit \
+        gnupg \
+        procps \
+        libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev \
+&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v${PROXYSQL_VERSION}/proxysql_${PROXYSQL_VERSION}-debian10_amd64.deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
 && docker-php-ext-configure gd --with-freetype --with-jpeg \
 && docker-php-ext-install gd \
-&& dpkg --purge libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev \
+&& dpkg --purge libfreetype-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev \
 && apt-get autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
