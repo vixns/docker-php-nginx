@@ -43,7 +43,7 @@ RUN set -x \
 && echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && chmod +x /run.sh \
 && mkdir -p /var/lib/proxysql \
-&& chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx
+&& chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx /var/log/nginx
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
