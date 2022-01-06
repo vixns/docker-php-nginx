@@ -1,4 +1,4 @@
-FROM php:7.4.24-fpm
+FROM php:7.4.27-fpm-bullseye
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -6,7 +6,7 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.2.1
+ENV PROXYSQL_VERSION=2.3.2
 
 RUN set -x \
     \
