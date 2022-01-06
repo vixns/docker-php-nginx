@@ -11,9 +11,9 @@ ENV PROXYSQL_VERSION=2.2.1
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
     && echo "deb http://http.debian.net/debian bullseye-backports contrib non-free main" >> /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get dist-upgrade -y -t bullseye-backports \
-    && apt-get install --no-install-recommends -t bullseye-backports -y \
+    && apt update \
+    && apt upgrade -y -t bullseye-backports \
+    && apt install --no-install-recommends -t bullseye-backports -y \
         haproxy \
         nginx \
         runit \
@@ -27,7 +27,7 @@ RUN set -x \
 && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
 && docker-php-ext-install gd \
 && dpkg --purge libfreetype-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev libwebp-dev \
-&& apt-get autoremove -y \
+&& apt autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
 && rm -f /usr/local/etc/php-fpm.d/* /etc/haproxy/haproxy.cfg \
@@ -50,5 +50,5 @@ COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
 USER www-data
-ENTRYPOINT ["tini"]
+ENTRYPOINT ["/usr/bin/tini"]
 CMD ["/run.sh"]

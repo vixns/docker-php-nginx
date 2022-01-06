@@ -20,20 +20,16 @@ node {
     stage("Register QEMU emulators") {
         sh """
         docker run --rm --privileged docker/binfmt:820fdd95a9972a5308930a2bdfb8573dd4447ad3
-        cat /proc/sys/fs/binfmt_misc/qemu-aarch64
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         """
     }
 
     // Create a buildx builder container to do the multi-architectural builds
     stage("Create Buildx Builder") {
         sh """
-        ## Create buildx builder
-        docker buildx create --name mbuilder
+        ## Create buildx builder if not exists
+        docker buildx inspect mbuilder 2>&1 > /dev/null || docker buildx create --name mbuilder
         docker buildx use mbuilder
-        docker buildx inspect --bootstrap
-
-        ## Sanity check step
-        docker buildx ls
         """
     }
 
@@ -41,17 +37,6 @@ node {
     stage("Build multi-arch image") {
         sh """
         docker buildx build --platform linux/amd64,linux/arm64 --push -t vixns/php-nginx:$BRANCH_NAME .
-        """
-    }
-
-    // Need to clean up
-    stage("Destroy buildx builder") {
-        sh """
-        docker buildx use default
-        docker buildx rm mbuilder
-
-        ## Sanity check step
-        docker buildx ls
         """
     }
   }
