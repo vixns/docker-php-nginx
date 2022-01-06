@@ -11,22 +11,22 @@ ENV TINI_VERSION=0.19.0 PROXYSQL_VERSION=2.3.2
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
     && echo "deb http://http.debian.net/debian bullseye-backports contrib non-free main" >> /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get dist-upgrade -y -t bullseye-backports \
-    && apt-get install --no-install-recommends -t bullseye-backports -y \
+    && apt update \
+    && apt upgrade -y -t bullseye-backports \
+    && apt install --no-install-recommends -t bullseye-backports -y \
         haproxy \
         nginx \
         runit \
         gnupg \
         procps \
         libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
-&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v${PROXYSQL_VERSION}/proxysql_${PROXYSQL_VERSION}-debian10_amd64.deb \
+&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v${PROXYSQL_VERSION}/proxysql_${PROXYSQL_VERSION}-debian10_$(dpkg --print-architecture).deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
 && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
 && docker-php-ext-install gd \
 && dpkg --purge libfreetype-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev libwebp-dev \
-&& apt-get autoremove -y \
+&& apt autoremove -y \
 && rm -rf /var/lib/apt/* \
 && chmod +x /etc/service/haproxy/run /etc/service/proxysql/run /etc/service/nginx/run /etc/service/php-fpm/run \
 && rm -f /usr/local/etc/php-fpm.d/* /etc/haproxy/haproxy.cfg \
@@ -40,10 +40,8 @@ RUN set -x \
 && echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
-&& curl -s -L -o /tmp/tini_${TINI_VERSION}-amd64.deb https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}-amd64.deb \
-&& dpkg -i /tmp/tini_${TINI_VERSION}-amd64.deb \
-&& rm /tmp/tini_${TINI_VERSION}-amd64.deb \
-&& chmod +x /run.sh \
+&& curl -sJL -o /usr/bin/tini https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-$(dpkg --print-architecture) \
+&& chmod +x /usr/bin/tini /run.sh \
 && mkdir -p /var/lib/proxysql \
 && chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx /var/log/nginx
 
@@ -52,5 +50,5 @@ COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY php-fpm.conf /usr/local/etc/php-fpm.conf
 
 USER www-data
-ENTRYPOINT ["tini"]
+ENTRYPOINT ["/usr/bin/tini"]
 CMD ["/run.sh"]
