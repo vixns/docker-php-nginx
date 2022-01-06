@@ -6,7 +6,7 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV TINI_VERSION=0.19.0 PROXYSQL_VERSION=2.3.2
+ENV PROXYSQL_VERSION=2.3.2
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
@@ -17,6 +17,7 @@ RUN set -x \
         haproxy \
         nginx \
         runit \
+        tini \
         gnupg \
         procps \
         libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
@@ -40,8 +41,6 @@ RUN set -x \
 && echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
-&& curl -sJL -o /usr/bin/tini https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-$(dpkg --print-architecture) \
-&& chmod +x /usr/bin/tini /run.sh \
 && mkdir -p /var/lib/proxysql \
 && chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx /var/log/nginx
 
