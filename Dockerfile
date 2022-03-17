@@ -1,4 +1,4 @@
-FROM php:7.4.27-fpm-bullseye
+FROM php:7.4.28-fpm-bullseye
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
