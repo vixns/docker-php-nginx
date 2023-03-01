@@ -6,7 +6,7 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.4.4
+ENV PROXYSQL_VERSION=2.4.8
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
