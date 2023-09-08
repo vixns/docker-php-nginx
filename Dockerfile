@@ -1,4 +1,4 @@
-FROM php:8.2.7-fpm-bullseye
+FROM php:8.2.10-fpm-bullseye
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -6,7 +6,7 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.5.3
+ENV PROXYSQL_VERSION=2.5.5
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
