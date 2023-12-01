@@ -20,7 +20,7 @@ RUN set -x \
         tini \
         gnupg \
         procps \
-        libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng-dev libjpeg-dev libwebp-dev \
+        libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng16-16 libwebp7 libjpeg62-turbo libfreetype6 libpng-dev libjpeg-dev libwebp-dev \
 && curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v${PROXYSQL_VERSION}/proxysql_${PROXYSQL_VERSION}-debian10_$(dpkg --print-architecture).deb \
 && dpkg -i /tmp/proxysql.deb \
 && rm /tmp/proxysql.deb \
