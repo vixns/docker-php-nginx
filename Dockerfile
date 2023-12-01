@@ -1,4 +1,4 @@
-FROM php:8.1.25-fpm-bullseye
+FROM php:8.1.26-fpm-bookworm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -10,10 +10,10 @@ ENV PROXYSQL_VERSION=2.5.5
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
-    && echo "deb http://http.debian.net/debian bullseye-backports contrib non-free main" >> /etc/apt/sources.list \
+    && echo "deb http://http.debian.net/debian bookworm-backports contrib non-free main" >> /etc/apt/sources.list \
     && apt update \
-    && apt upgrade -y -t bullseye-backports \
-    && apt install --no-install-recommends -t bullseye-backports -y \
+    && apt upgrade -y -t bookworm-backports \
+    && apt install --no-install-recommends -t bookworm-backports -y \
         haproxy \
         nginx \
         runit \
