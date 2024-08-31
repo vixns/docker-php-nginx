@@ -1,4 +1,4 @@
-FROM php:8.3.10-fpm-bookworm
+FROM php:8.3.11-fpm-bookworm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -6,7 +6,7 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.6.3
+ENV PROXYSQL_VERSION=2.6.4
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
