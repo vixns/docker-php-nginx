@@ -1,4 +1,4 @@
-FROM php:8.3.14-fpm-bookworm
+FROM php:8.4.1-fpm-bookworm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
