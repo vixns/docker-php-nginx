@@ -1,4 +1,4 @@
-FROM php:8.1.31-fpm-bookworm
+FROM php:8.1.32-fpm-bookworm
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -6,7 +6,7 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.6.6
+ENV PROXYSQL_VERSION=2.7.3
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
@@ -40,7 +40,6 @@ RUN set -x \
 && echo "opcache.memory_consumption=128" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
-&& echo "opcache.fast_shutdown=1" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && mkdir -p /var/lib/proxysql \
 && chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx /var/log/nginx
 
