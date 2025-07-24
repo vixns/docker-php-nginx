@@ -6,14 +6,13 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.4.8
+ENV PROXYSQL_VERSION=2.7.3
 
 RUN set -x \
     && export DEBIAN_FRONTEND=noninteractive \
-    && echo "deb http://http.debian.net/debian bullseye-backports contrib non-free main" >> /etc/apt/sources.list \
     && apt update \
-    && apt upgrade -y -t bullseye-backports \
-    && apt install --no-install-recommends -t bullseye-backports -y \
+    && apt upgrade -y \
+    && apt install --no-install-recommends  -y \
         haproxy \
         nginx \
         runit \
