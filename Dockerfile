@@ -1,4 +1,4 @@
-FROM php:8.4.5-fpm-bookworm
+FROM php:8.4.13-fpm-trixie
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -6,24 +6,24 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.7.3
+ENV PROXYSQL_VERSION=2.7
 
 RUN set -x \
-    && export DEBIAN_FRONTEND=noninteractive \
-    && echo "deb http://http.debian.net/debian bookworm-backports contrib non-free main" >> /etc/apt/sources.list \
-    && apt update \
-    && apt upgrade -y -t bookworm-backports \
-    && apt install --no-install-recommends -t bookworm-backports -y \
-        haproxy \
-        nginx \
-        runit \
-        tini \
-        gnupg \
-        procps \
-        libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng16-16 libwebp7 libjpeg62-turbo libfreetype6 libpng-dev libjpeg-dev libwebp-dev \
-&& curl -sL -o /tmp/proxysql.deb https://github.com/sysown/proxysql/releases/download/v${PROXYSQL_VERSION}/proxysql_${PROXYSQL_VERSION}-debian10_$(dpkg --print-architecture).deb \
-&& dpkg -i /tmp/proxysql.deb \
-&& rm /tmp/proxysql.deb \
+&& export DEBIAN_FRONTEND=noninteractive \
+&& apt update \
+&& apt-get install -y --no-install-recommends lsb-release wget apt-transport-https ca-certificates gnupg \
+&& wget -nv -O /etc/apt/trusted.gpg.d/proxysql-3.0.x-keyring.gpg 'https://repo.proxysql.com/ProxySQL/proxysql-3.0.x/repo_pub_key.gpg' \
+&& echo deb https://repo.proxysql.com/ProxySQL/proxysql-${PROXYSQL_VERSION}.x/bookworm/ ./ | tee /etc/apt/sources.list.d/proxysql.list \
+#&& echo deb https://repo.proxysql.com/ProxySQL/proxysql-${PROXYSQL_VERSION}.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list \
+&& apt update \
+&& apt install --no-install-recommends -y \
+    haproxy \
+    nginx \
+    runit \
+    tini \
+    procps \
+    proxysql \
+    libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng16-16 libwebp7 libjpeg62-turbo libfreetype6 libpng-dev libjpeg-dev libwebp-dev \
 && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
 && docker-php-ext-install gd \
 && dpkg --purge libfreetype-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev libwebp-dev \
