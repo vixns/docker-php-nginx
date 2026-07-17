@@ -1,4 +1,4 @@
-FROM php:8.3.26-fpm-trixie
+FROM php:8.3.32-fpm-trixie
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -6,15 +6,14 @@ COPY nginx-run /etc/service/nginx/run
 COPY php-run /etc/service/php-fpm/run
 COPY run.sh /run.sh
 
-ENV PROXYSQL_VERSION=2.7
+ENV PROXYSQL_VERSION=3.0
 
 RUN set -x \
 && export DEBIAN_FRONTEND=noninteractive \
 && apt update \
 && apt-get install -y --no-install-recommends lsb-release wget apt-transport-https ca-certificates gnupg \
 && wget -nv -O /etc/apt/trusted.gpg.d/proxysql-3.0.x-keyring.gpg 'https://repo.proxysql.com/ProxySQL/proxysql-3.0.x/repo_pub_key.gpg' \
-&& echo deb https://repo.proxysql.com/ProxySQL/proxysql-${PROXYSQL_VERSION}.x/bookworm/ ./ | tee /etc/apt/sources.list.d/proxysql.list \
-#&& echo deb https://repo.proxysql.com/ProxySQL/proxysql-${PROXYSQL_VERSION}.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list \
+&& echo deb https://repo.proxysql.com/ProxySQL/proxysql-${PROXYSQL_VERSION}.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list \
 && apt update \
 && apt install --no-install-recommends -y \
     haproxy \
