@@ -1,4 +1,4 @@
-FROM php:8.2.32-fpm-trixie
+FROM php:8.2.35-fpm-trixie
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
