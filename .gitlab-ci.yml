@@ -1,0 +1,19 @@
+include:
+  - https://gitlab.com/vixns/ci-files/-/raw/main/buildkit.yaml
+
+stages:
+  - build
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+# Branch name is the Docker Hub tag (vixns/php-nginx:8.5.12).
+# The shared BuildKit daemon is amd64-only.
+build-image:
+  extends: .image.Build.Buildkit
+  variables:
+    BUILD_DST: docker.io/vixns/php-nginx:${CI_COMMIT_REF_NAME}
+    BUILD_ARGS: --platform linux/amd64
