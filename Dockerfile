@@ -1,4 +1,37 @@
+FROM php:8.1.32-fpm-bookworm AS php-patch
+
+COPY CVE-2026-109618-109619.patch /usr/src/php-fix.patch
+
+# Rebuild 8.1.32 with the PHP team's EOL backport of CVE-2026-109618 and CVE-2026-109619
+# (php-src 1d7dec178a, branch PHP-8.1-CVE-2026-109618-109619).
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      $PHPIZE_DEPS patch \
+      libargon2-dev libcurl4-openssl-dev libonig-dev libreadline-dev libsodium-dev \
+      libsqlite3-dev libssl-dev libxml2-dev zlib1g-dev \
+    ; \
+    export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS"; \
+    configureOptions="$(php-config --configure-options)"; \
+    docker-php-source extract; \
+    cd /usr/src/php; \
+    patch -p1 --forward --no-backup-if-mismatch < /usr/src/php-fix.patch; \
+    mkdir -p /out/usr/src; \
+    tar -cJf /out/usr/src/php.tar.xz -C /usr/src --exclude=.docker-delete-me \
+      --transform 's,^php,php-8.1.32,' php; \
+    debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
+    if [ ! -e /usr/include/curl ] && [ ! -e /usr/local/include/curl ]; then \
+      ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
+    fi; \
+    ./configure $configureOptions; \
+    make -j "$(nproc)"; \
+    make INSTALL_ROOT=/out install-sapi install-binaries install-build \
+      install-headers install-programs install-modules; \
+    find /out -type f -perm '/0111' -exec strip --strip-all '{}' + || :
+
 FROM php:8.1.32-fpm-bookworm
+
+COPY --from=php-patch /out/ /
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
