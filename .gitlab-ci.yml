@@ -10,7 +10,7 @@ workflow:
       when: never
     - if: $CI_COMMIT_BRANCH
 
-# Branch name is the Docker Hub tag (vixns/php-nginx:8.5.12).
+# Branch name is the Docker Hub tag (vixns/php-nginx:8.3.37).
 # The shared BuildKit daemon is amd64-only.
 build-image:
   extends: .image.Build.Buildkit
