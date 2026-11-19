@@ -25,7 +25,7 @@ RUN set -x \
     tini \
     procps \
     proxysql \
-    libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng16-16 libwebp7 libjpeg62-turbo libfreetype6 libpng-dev libjpeg-dev libwebp-dev \
+    libfreetype-dev libjpeg62-turbo-dev libxml2-dev libpng16-16 libwebp7 libwebpdemux2 libwebpmux3 libjpeg62-turbo libfreetype6 libpng-dev libjpeg-dev libwebp-dev \
 && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --enable-gd \
 && docker-php-ext-install gd \
 && dpkg --purge libfreetype-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libxml2-dev libwebp-dev \
