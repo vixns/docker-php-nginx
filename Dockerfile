@@ -1,4 +1,4 @@
-FROM php:8.5.12-fpm-trixie
+FROM php:8.5.13-fpm-trixie
 
 COPY haproxy-run /etc/service/haproxy/run
 COPY proxysql-run /etc/service/proxysql/run
@@ -14,10 +14,13 @@ RUN set -x \
 && apt-get install -y --no-install-recommends lsb-release wget apt-transport-https ca-certificates gnupg \
 && wget -nv -O /etc/apt/trusted.gpg.d/proxysql-3.0.x-keyring.gpg 'https://repo.proxysql.com/ProxySQL/proxysql-3.0.x/repo_pub_key.gpg' \
 && echo deb https://repo.proxysql.com/ProxySQL/proxysql-${PROXYSQL_VERSION}.x/$(lsb_release -sc)/ ./ | tee /etc/apt/sources.list.d/proxysql.list \
+&& wget -nv -O- https://nginx.org/keys/nginx_signing.key | gpg --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg \
+&& echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/debian $(lsb_release -sc) nginx" > /etc/apt/sources.list.d/nginx.list \
+&& printf '%s\n' 'Package: nginx' 'Pin: version 1.30.7-1~trixie' 'Pin-Priority: 1001' > /etc/apt/preferences.d/nginx \
 && apt update \
 && apt install --no-install-recommends -y \
     haproxy \
-    nginx \
+    nginx=1.30.7-1~trixie \
     runit \
     tini \
     procps \
@@ -38,8 +41,9 @@ RUN set -x \
 && echo "opcache.memory_consumption=128" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.interned_strings_buffer=8" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
 && echo "opcache.max_accelerated_files=4000" >> "/usr/local/etc/php/conf.d/ext-opcache.ini" \
-&& mkdir -p /var/lib/proxysql \
-&& chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx /var/log/nginx
+&& mkdir -p /var/lib/proxysql /etc/nginx/modules-enabled /var/lib/nginx /var/cache/nginx \
+&& rm -f /etc/nginx/conf.d/default.conf \
+&& chown -R www-data /etc/service /var/lib/proxysql /etc/nginx /var/lib/nginx /var/log/nginx /var/cache/nginx
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
